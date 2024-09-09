@@ -1,4 +1,12 @@
-import { Mail, MapPinCheckInside, Phone } from "lucide-react";
+import {
+  Mail,
+  MapPinCheckInside,
+  Phone,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
 import React from "react";
 
 const Footer = () => {
@@ -136,6 +144,36 @@ const Footer = () => {
               </a>
             </li>
           </ul>
+        </div>
+      </div>
+
+      {/* Social Media */}
+      <div className="container mx-auto px-4 mt-8">
+        <div className="flex justify-center space-x-6">
+          <a
+            href="https://facebook.com"
+            className="text-blue-400 hover:text-white"
+          >
+            <Facebook size={24} />
+          </a>
+          <a
+            href="https://twitter.com"
+            className="text-blue-400 hover:text-white"
+          >
+            <Twitter size={24} />
+          </a>
+          <a
+            href="https://instagram.com"
+            className="text-blue-400 hover:text-white"
+          >
+            <Instagram size={24} />
+          </a>
+          <a
+            href="https://linkedin.com"
+            className="text-blue-400 hover:text-white"
+          >
+            <Linkedin size={24} />
+          </a>
         </div>
       </div>
 
