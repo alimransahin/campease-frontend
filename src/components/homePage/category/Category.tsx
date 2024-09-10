@@ -1,4 +1,7 @@
 import React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import CategoryCard from "./categoryCard";
 
 const CategoriesSection = () => {
@@ -30,15 +33,48 @@ const CategoriesSection = () => {
     },
   ];
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    centerMode: true,
+    centerPadding: "40px",
+    slidesToShow: 3,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: true,
+    pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          centerPadding: "20px",
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "10px",
+        },
+      },
+    ],
+  };
+
   return (
     <div className="py-12 bg-gray-100">
       <h2 className="text-3xl font-semibold text-center text-[#004e92] mb-8">
         Shop by Category
       </h2>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-6 lg:px-12">
-        {categories.map((category, index) => (
-          <CategoryCard key={index} category={category} />
-        ))}
+      <div className="container mx-auto px-6 lg:px-12">
+        <Slider {...settings}>
+          {categories.map((category, index) => (
+            <div key={index} className="px-4">
+              <CategoryCard category={category} />
+            </div>
+          ))}
+        </Slider>
       </div>
     </div>
   );

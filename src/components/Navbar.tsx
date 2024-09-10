@@ -8,6 +8,7 @@ const Header = () => {
     { name: "Products", link: "/products" },
     { name: "About Us", link: "/about" },
     { name: "Contact Us", link: "/contact" },
+    { name: "Product Manage", link: "/manage" },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
