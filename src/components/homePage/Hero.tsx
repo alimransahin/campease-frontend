@@ -2,6 +2,7 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 
 function SimpleSlider() {
   const settings = {
@@ -63,12 +64,12 @@ function SimpleSlider() {
             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center space-y-4">
               <h2 className="text-4xl text-white font-bold">{item.title}</h2>
               <p className="text-lg text-white">{item.description}</p>
-              <a
-                href="/products"
+              <Link
+                to="/products"
                 className="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-md text-white border border-white rounded-lg transition-all hover:bg-gradient-to-br hover:from-[#000428] hover:to-[#004e92] hover:border-transparent"
               >
                 Shop Now
-              </a>
+              </Link>
             </div>
           </div>
         ))}
