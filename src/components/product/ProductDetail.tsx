@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import getAllProducts from "../../pages/data";
 import ReactImageMagnify from "react-image-magnify";
+import { useAppDispatch } from "../../redux/hooks";
+import { addToCart } from "../../redux/features/cartSlice";
 
 const ProductDetail = () => {
+  const dispatch = useAppDispatch();
+  const handleAddToCart = (product: any) => {
+    dispatch(addToCart(product));
+  };
   const { id } = useParams<{ id: string }>(); // Extract id from params
   if (!id) {
     return <p>Invalid product ID</p>;
@@ -17,10 +23,6 @@ const ProductDetail = () => {
   }
 
   const [quantity, setQuantity] = useState(1);
-
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${product.name} to cart.`);
-  };
 
   const handleAddToWishlist = () => {
     console.log(`${product.name} added to wishlist.`);
@@ -134,7 +136,9 @@ const ProductDetail = () => {
               />
             </div>
             <button
-              onClick={handleAddToCart}
+              onClick={() => {
+                handleAddToCart(product);
+              }}
               className="px-6 py-3 bg-[#004e92] text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] transform transition-transform hover:scale-105"
             >
               Add to Cart

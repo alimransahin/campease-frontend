@@ -2,19 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import getAllProducts from "../../pages/data";
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: string; // Change from number to string
-  image: string;
-  ratings: number;
-}
-
 const FeaturedProducts: React.FC = () => {
-  // Sample logic to select featured products. Adjust as needed.
   const products = getAllProducts();
-  const featuredProducts: Product[] = products.slice(0, 4); // Example: taking first 3 products as featured
+  const featuredProducts: any = products.slice(0, 4);
 
   return (
     <div className="py-12 bg-gray-50">
@@ -24,7 +14,7 @@ const FeaturedProducts: React.FC = () => {
 
       {/* Product Grid */}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-6 lg:px-12">
-        {featuredProducts.map((product) => (
+        {featuredProducts.map((product: any) => (
           <div
             key={product.id}
             className="border rounded-lg shadow-lg overflow-hidden"

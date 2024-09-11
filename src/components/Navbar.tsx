@@ -1,6 +1,7 @@
 import { ShoppingCart, Menu, X, Heart } from "lucide-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
 
 const Header = () => {
   const menu = [
@@ -17,6 +18,7 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const cartItems = useAppSelector((store) => store.cart.products);
   return (
     <header className="bg-gradient-to-r from-[#000428]  to-[#004e92] text-white rounded-sm px-3">
       <nav className="container mx-auto flex items-center justify-between space-x-10 py-2 md:py-4 ">
@@ -52,7 +54,7 @@ const Header = () => {
               <ShoppingCart size={24} />
             </Link>
             <span className="rounded-full absolute top-[-10px] left-[20px] bg-primary text-white text-center size-[25px]">
-              2
+              {cartItems.length}
             </span>
           </li>
 

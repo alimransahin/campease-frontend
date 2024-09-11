@@ -1,67 +1,43 @@
 import { Trash } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
 
-interface Product {
-  id: number;
-  name: string;
-  regularPrice: number;
-  offerPrice?: number;
-  qty: number; // Quantity in stock
-  images: string[];
-}
+// const sampleProducts: CartItem[] = [
+//   {
+//     id: 1,
+//     name: "Camping Tent",
+//     regularPrice: 150,
+//     offerPrice: 120,
+//     qty: 5,
+//     images: ["https://via.placeholder.com/150"],
+//     quantity: 1,
+//   },
+//   {
+//     id: 2,
+//     name: "Sleeping Bag",
+//     regularPrice: 80,
+//     offerPrice: 70,
+//     qty: 10,
+//     images: ["https://via.placeholder.com/150"],
+//     quantity: 2,
+//   },
+//   {
+//     id: 3,
+//     name: "Camping Chair",
+//     regularPrice: 50,
+//     qty: 8,
+//     images: ["https://via.placeholder.com/150"],
+//     quantity: 1,
+//   },
+// ];
 
-interface CartItem extends Product {
-  quantity: number;
-}
-
-const sampleProducts: CartItem[] = [
-  {
-    id: 1,
-    name: "Camping Tent",
-    regularPrice: 150,
-    offerPrice: 120,
-    qty: 5,
-    images: ["https://via.placeholder.com/150"],
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "Sleeping Bag",
-    regularPrice: 80,
-    offerPrice: 70,
-    qty: 10,
-    images: ["https://via.placeholder.com/150"],
-    quantity: 2,
-  },
-  {
-    id: 3,
-    name: "Camping Chair",
-    regularPrice: 50,
-    qty: 8,
-    images: ["https://via.placeholder.com/150"],
-    quantity: 1,
-  },
-];
-
-const Cart: React.FC = () => {
-  const [cart, setCart] = useState<CartItem[]>(sampleProducts);
+const Cart = () => {
+  const cart = useAppSelector((store) => store.cart.products);
+  const { totalPrice } = useAppSelector((store) => store.cart);
   const navigate = useNavigate();
 
   // Load cart from localStorage or use sample products for testing
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    } else {
-      setCart(sampleProducts);
-    }
-  }, []);
-
-  // Save cart to localStorage
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
 
   // Page refresh warning when cart is not empty
   useEffect(() => {
@@ -79,30 +55,30 @@ const Cart: React.FC = () => {
     };
   }, [cart]);
 
-  const handleQuantityChange = (id: number, quantity: number) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-      )
-    );
-  };
+  // const handleQuantityChange = (id: number, quantity: number) => {
+  //   setCart((prevCart) =>
+  //     prevCart.map((item) =>
+  //       item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+  //     )
+  //   );
+  // };
 
-  const handleRemoveProduct = (id: number) => {
-    if (
-      window.confirm(
-        "Are you sure you want to remove this product from your cart?"
-      )
-    ) {
-      setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-    }
-  };
+  // const handleRemoveProduct = (id: number) => {
+  //   if (
+  //     window.confirm(
+  //       "Are you sure you want to remove this product from your cart?"
+  //     )
+  //   ) {
+  //     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  //   }
+  // };
 
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => {
-      const price = item.offerPrice || item.regularPrice;
-      return total + price * item.quantity;
-    }, 0);
-  };
+  // const getTotalPrice = () => {
+  //   return cart.reduce((total, item) => {
+  //     const price = item.offerPrice || item.regularPrice;
+  //     return total + price * item.quantity;
+  //   }, 0);
+  // };
 
   const isOrderEnabled = () => {
     return cart.every((item) => item.quantity <= item.qty);
@@ -200,8 +176,8 @@ const Cart: React.FC = () => {
                 Pricing Details
               </h2>
               <div className="text-lg text-gray-700 mt-2">
-                <p>Sub-Total: ৳{getTotalPrice().toLocaleString()}</p>
-                <p>Total: ৳{getTotalPrice().toLocaleString()}</p>
+                {/* <p>Sub-Total: ৳{getTotalPrice().toLocaleString()}</p> */}
+                <p>Total: ${totalPrice}</p>
               </div>
             </div>
 
