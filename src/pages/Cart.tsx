@@ -2,7 +2,6 @@ import { Trash } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Define the structure of the cart item and product
 interface Product {
   id: number;
   name: string;
@@ -22,9 +21,9 @@ const sampleProducts: CartItem[] = [
     name: "Camping Tent",
     regularPrice: 150,
     offerPrice: 120,
-    qty: 5, // Quantity in stock
+    qty: 5,
     images: ["https://via.placeholder.com/150"],
-    quantity: 1, // Quantity in cart
+    quantity: 1,
   },
   {
     id: 2,
@@ -46,51 +45,38 @@ const sampleProducts: CartItem[] = [
 ];
 
 const Cart: React.FC = () => {
-  const [cart, setCart] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Camping Tent",
-      regularPrice: 150,
-      offerPrice: 120,
-      qty: 5, // Quantity in stock
-      images: ["https://via.placeholder.com/150"],
-      quantity: 1, // Quantity in cart
-    },
-    {
-      id: 2,
-      name: "Sleeping Bag",
-      regularPrice: 80,
-      offerPrice: 70,
-      qty: 10,
-      images: ["https://via.placeholder.com/150"],
-      quantity: 2,
-    },
-    {
-      id: 3,
-      name: "Camping Chair",
-      regularPrice: 50,
-      qty: 8,
-      images: ["https://via.placeholder.com/150"],
-      quantity: 1,
-    },
-  ]);
-
+  const [cart, setCart] = useState<CartItem[]>(sampleProducts);
   const navigate = useNavigate();
 
+  // Load cart from localStorage or use sample products for testing
   useEffect(() => {
-    // Load cart from localStorage or use sample products for testing
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       setCart(JSON.parse(savedCart));
     } else {
-      // Set sample products as default for testing
       setCart(sampleProducts);
     }
   }, []);
 
+  // Save cart to localStorage
   useEffect(() => {
-    // Save cart to localStorage or any state management solution
     localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Page refresh warning when cart is not empty
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (cart.length > 0) {
+        e.preventDefault();
+        e.returnValue = ""; // Some browsers require this to show a warning dialog
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, [cart]);
 
   const handleQuantityChange = (id: number, quantity: number) => {
@@ -119,7 +105,7 @@ const Cart: React.FC = () => {
   };
 
   const isOrderEnabled = () => {
-    return cart.every((item) => item.quantity <= item.qty); // Ensure all items are in stock
+    return cart.every((item) => item.quantity <= item.qty);
   };
 
   const handlePlaceOrder = () => {
@@ -163,11 +149,7 @@ const Cart: React.FC = () => {
                       <h2 className="text-lg font-semibold text-gray-900">
                         {item.name}
                       </h2>
-                      {/* <p className="text-sm text-gray-600">
-                        Reward Points: {item.rewardPoints || 0}
-                      </p> */}
                     </td>
-                    {/* <td className="p-4">{item.model}</td> */}
                     <td className="p-4">
                       <div className="flex items-center space-x-2">
                         <button
@@ -213,7 +195,6 @@ const Cart: React.FC = () => {
               </tbody>
             </table>
 
-            {/* Pricing Summary */}
             <div className="mt-6">
               <h2 className="text-xl font-semibold text-gray-900">
                 Pricing Details
@@ -224,7 +205,6 @@ const Cart: React.FC = () => {
               </div>
             </div>
 
-            {/* Place Order Button */}
             <div className="mt-6 flex justify-end">
               <button
                 onClick={handlePlaceOrder}
