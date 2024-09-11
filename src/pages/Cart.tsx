@@ -33,8 +33,8 @@ import { useAppSelector } from "../redux/hooks";
 // ];
 
 const Cart = () => {
-  const cart = useAppSelector((store) => store.cart.products);
-  const { totalPrice } = useAppSelector((store) => store.cart);
+  const products = useAppSelector((store) => store.cart.products);
+  const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
   const navigate = useNavigate();
 
   // Load cart from localStorage or use sample products for testing
@@ -42,7 +42,7 @@ const Cart = () => {
   // Page refresh warning when cart is not empty
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (cart.length > 0) {
+      if (products.length > 0) {
         e.preventDefault();
         e.returnValue = ""; // Some browsers require this to show a warning dialog
       }
@@ -53,7 +53,7 @@ const Cart = () => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [cart]);
+  }, [products]);
 
   // const handleQuantityChange = (id: number, quantity: number) => {
   //   setCart((prevCart) =>
@@ -81,7 +81,7 @@ const Cart = () => {
   // };
 
   const isOrderEnabled = () => {
-    return cart.every((item) => item.quantity <= item.qty);
+    return products.every((item) => item.quantity <= item.qty);
   };
 
   const handlePlaceOrder = () => {
@@ -96,7 +96,7 @@ const Cart = () => {
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold text-blue-500 mb-6">Shopping Cart</h1>
       <div className="bg-white shadow-md rounded-lg p-6">
-        {cart.length === 0 ? (
+        {products.length === 0 ? (
           <p className="text-xl py-8 lg:py-48">Your cart is empty.</p>
         ) : (
           <>
@@ -112,7 +112,7 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cart.map((item) => (
+                {products.map((item) => (
                   <tr key={item.id} className="border-b border-gray-200">
                     <td className="p-4">
                       <img
@@ -177,7 +177,12 @@ const Cart = () => {
               </h2>
               <div className="text-lg text-gray-700 mt-2">
                 {/* <p>Sub-Total: ৳{getTotalPrice().toLocaleString()}</p> */}
-                <p>Total: ${totalPrice}</p>
+                <p>Items: {products.length}</p>
+                <p>Total Price: ${totalPrice.toFixed(2)}</p>
+                <p>Tax (10%): ${tax.toFixed(2)}</p>
+                <p className="font-bold text-xl">
+                  Grand Total: ${grandTotal.toFixed(2)}
+                </p>
               </div>
             </div>
 

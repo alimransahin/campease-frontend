@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Sample cart items for demonstration
-const sampleCart = [
-  {
-    id: 1,
-    name: "SANTAK Castle C1K 1000VA Standard Backup Online UPS",
-    qty: 5,
-    regularPrice: 30000,
-    quantity: 1,
-  },
-  // Add more items if needed
-];
-
 const Checkout: React.FC = () => {
   const [userDetails, setUserDetails] = useState({
     name: "",
