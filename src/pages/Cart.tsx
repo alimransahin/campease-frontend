@@ -34,7 +34,6 @@ import { useAppSelector } from "../redux/hooks";
 
 const Cart = () => {
   const products = useAppSelector((store) => store.cart.products);
-  const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
   const navigate = useNavigate();
 
   // Load cart from localStorage or use sample products for testing
@@ -100,10 +99,10 @@ const Cart = () => {
           <p className="text-xl py-8 lg:py-48">Your cart is empty.</p>
         ) : (
           <>
-            <table className="min-w-full table-auto border-collapse">
+            <table className="min-w-full table-auto border-collapse ">
               <thead>
-                <tr className="text-left border-b border-gray-300">
-                  <th className="p-4">Image</th>
+                <tr className="text-left border-b border-gray-300 text-center">
+                  <th className="p-4 ">Image</th>
                   <th className="p-4">Product Name</th>
                   <th className="p-4">Quantity</th>
                   <th className="p-4">Unit Price</th>
@@ -113,12 +112,15 @@ const Cart = () => {
               </thead>
               <tbody>
                 {products.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-200">
+                  <tr
+                    key={item.id}
+                    className="border-b border-gray-200 text-center"
+                  >
                     <td className="p-4">
                       <img
                         src={item.images[0]}
                         alt={item.name}
-                        className="w-20 h-20 object-cover rounded-md"
+                        className="w-20 h-20 object-cover rounded-md mx-auto"
                       />
                     </td>
                     <td className="p-4">
@@ -127,7 +129,7 @@ const Cart = () => {
                       </h2>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex justify-center space-x-2">
                         <button
                           onClick={() =>
                             handleQuantityChange(item.id, item.quantity - 1)
@@ -171,26 +173,11 @@ const Cart = () => {
               </tbody>
             </table>
 
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Pricing Details
-              </h2>
-              <div className="text-lg text-gray-700 mt-2">
-                {/* <p>Sub-Total: ৳{getTotalPrice().toLocaleString()}</p> */}
-                <p>Items: {products.length}</p>
-                <p>Total Price: ${totalPrice.toFixed(2)}</p>
-                <p>Tax (10%): ${tax.toFixed(2)}</p>
-                <p className="font-bold text-xl">
-                  Grand Total: ${grandTotal.toFixed(2)}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-center">
               <button
                 onClick={handlePlaceOrder}
                 disabled={!isOrderEnabled()}
-                className={`px-6 py-3 font-bold rounded-lg transition-all duration-500 ease-in-out ${
+                className={`px-12 py-3 font-bold rounded-lg transition-all duration-500 ease-in-out ${
                   isOrderEnabled()
                     ? "px-6 py-3 bg-[#004e92] text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] transform transition-transform hover:scale-105 my-4"
                     : "bg-gray-300 text-gray-700 border-2 border-gray-300 cursor-not-allowed"

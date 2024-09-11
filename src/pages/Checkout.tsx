@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../redux/hooks";
 
+interface IItem {
+  id: React.Key | null | undefined;
+  name: string;
+  regularPrice: number;
+  quantity: number;
+}
 const Checkout: React.FC = () => {
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -9,7 +16,9 @@ const Checkout: React.FC = () => {
     address: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("COD");
-  const [cart, setCart] = useState(sampleCart);
+  const myProduct = useAppSelector((store) => store.cart.products);
+  const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const navigate = useNavigate();
 
@@ -28,39 +37,16 @@ const Checkout: React.FC = () => {
     const { name, value } = e.target;
     setUserDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
-
-  // Handle order placement
   const handlePlaceOrder = () => {
     if (paymentMethod === "COD") {
-      // Deduct the quantity from the stock
-      setCart((prevCart) =>
-        prevCart.map((item) => ({ ...item, qty: item.qty - item.quantity }))
-      );
-      // Redirect to success page
       navigate("/success");
     } else if (paymentMethod === "Online") {
-      // Redirect to online payment gateway (mocking here)
       alert("Redirecting to online payment gateway...");
       navigate("/payment");
     }
   };
 
-  const getTotalPrice = () => {
-    return cart.reduce(
-      (total, item) => total + item.regularPrice * item.quantity,
-      0
-    );
-  };
-
-  const getHomeDeliveryFee = () => {
-    return 60; // Static fee, can be dynamic based on user's location or other factors
-  };
-
   const getOrderOverview = () => {
-    const subTotal = getTotalPrice();
-    const deliveryFee = getHomeDeliveryFee();
-    const total = subTotal + deliveryFee;
-
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -68,39 +54,46 @@ const Checkout: React.FC = () => {
         </h2>
         <table className="w-full border-collapse">
           <tbody>
-            {cart.map((item) => (
+            {myProduct.map((item: IItem) => (
               <tr key={item.id} className="border-b border-gray-200">
                 <td className="py-2 px-4 text-gray-900">{item.name}</td>
                 <td className="py-2 px-4 text-gray-700">
-                  {item.regularPrice.toLocaleString()}৳ x {item.quantity}
+                  ${item.regularPrice.toLocaleString()} x {item.quantity}
                 </td>
                 <td className="py-2 px-4 text-gray-700">
-                  {(item.regularPrice * item.quantity).toLocaleString()}৳
+                  ${(item.regularPrice * item.quantity).toLocaleString()}
                 </td>
               </tr>
             ))}
             <tr className="border-b border-gray-200">
               <td className="py-2 px-4 text-gray-900" colSpan={2}>
-                Sub-Total:
-              </td>
-              <td className="py-2 px-4 text-gray-700">
-                {subTotal.toLocaleString()}৳
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 px-4 text-gray-900" colSpan={2}>
-                Home Delivery:
-              </td>
-              <td className="py-2 px-4 text-gray-700">
-                {deliveryFee.toLocaleString()}৳
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 px-4 text-gray-900" colSpan={2}>
                 Total:
               </td>
-              <td className="py-2 px-4 text-gray-900">
-                {total.toLocaleString()}৳
+              <td className="py-2 px-4 text-gray-700">
+                ${totalPrice.toFixed(2)}
+              </td>
+            </tr>
+            <tr className="border-b border-gray-200">
+              <td className="py-2 px-4 text-gray-700 " colSpan={2}>
+                Tax:
+              </td>
+              <td className="py-2 px-4 text-gray-700">${tax.toFixed(2)}</td>
+            </tr>
+            {paymentMethod === "COD" && (
+              <tr className="border-b border-gray-200">
+                <td className="py-2 px-4 text-gray-700" colSpan={2}>
+                  Delivery Charge:
+                </td>
+                <td className="py-2 px-4 text-gray-700">$10</td>
+              </tr>
+            )}
+
+            <tr className="font-bold text-gray-900">
+              <td className="py-2 px-4 " colSpan={2}>
+                Grand Total:
+              </td>
+              <td className="py-2 px-4">
+                ${paymentMethod === "COD" ? grandTotal + 10 : grandTotal}
               </td>
             </tr>
           </tbody>
