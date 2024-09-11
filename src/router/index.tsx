@@ -1,12 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Cart from "../components/product/Cart";
+import Cart from "../pages/Cart";
 import Home from "../pages/Home";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import Product from "../pages/Product";
 import ProductDetail from "../components/product/ProductDetail";
 import ProductManagement from "../pages/ProductManagement";
+import Checkout from "../pages/Checkout";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
       {
         path: "/manage",
         element: <ProductManagement />,
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
       },
     ],
   },

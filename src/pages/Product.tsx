@@ -45,10 +45,12 @@ const Product = () => {
     )
     .filter((product) => {
       const [min, max] = priceRange.split("-").map(Number);
-      return product.price >= min && product.price <= max;
+      return product.regularPrice >= min && product.regularPrice <= max;
     })
     .sort((a, b) =>
-      sortOption === "asc" ? a.price - b.price : b.price - a.price
+      sortOption === "asc"
+        ? a.regularPrice - b.regularPrice
+        : b.regularPrice - a.regularPrice
     );
 
   return (
@@ -57,9 +59,9 @@ const Product = () => {
         All Products
       </h1>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col-reverse xl:flex-row  justify-between items-center mb-6">
         {/* Filters and Sorting on the Left */}
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
@@ -97,7 +99,7 @@ const Product = () => {
 
           <button
             onClick={handleClearFilters}
-            className="p-3 bg-red-500 text-white rounded-lg shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="px-6 py-3 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white"
           >
             Clear Filters
           </button>
@@ -110,7 +112,7 @@ const Product = () => {
             placeholder="Search by name or description"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="p-3 w-full max-w-md border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-3 xl:my-0 my-3 w-full max-w-md  border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
