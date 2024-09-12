@@ -29,7 +29,9 @@ const Checkout: React.FC = () => {
     const isPaymentMethodSelected =
       paymentMethod === "COD" || paymentMethod === "Online";
 
-    setIsButtonDisabled(!isFormComplete || !isPaymentMethodSelected);
+    setIsButtonDisabled(
+      !isFormComplete || !isPaymentMethodSelected || totalPrice === 0
+    );
   }, [userDetails, paymentMethod]);
 
   // Handle form input change
@@ -79,7 +81,7 @@ const Checkout: React.FC = () => {
               </td>
               <td className="py-2 px-4 text-gray-700">${tax.toFixed(2)}</td>
             </tr>
-            {paymentMethod === "COD" && (
+            {paymentMethod === "COD" && totalPrice !== 0 && (
               <tr className="border-b border-gray-200">
                 <td className="py-2 px-4 text-gray-700" colSpan={2}>
                   Delivery Charge:
@@ -93,7 +95,10 @@ const Checkout: React.FC = () => {
                 Grand Total:
               </td>
               <td className="py-2 px-4">
-                ${paymentMethod === "COD" ? grandTotal + 10 : grandTotal}
+                $
+                {paymentMethod === "COD" && totalPrice !== 0
+                  ? (grandTotal + 10).toFixed(2)
+                  : grandTotal.toFixed(2)}
               </td>
             </tr>
           </tbody>
@@ -207,7 +212,7 @@ const Checkout: React.FC = () => {
                   : "bg-gray-300 text-gray-700 border-2 border-gray-300 cursor-not-allowed"
               }`}
             >
-              Place Order
+              Confirm Order
             </button>
           </div>
         </div>
