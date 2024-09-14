@@ -11,7 +11,7 @@ const ProductCard = ({ product }: { product: IProduct }) => {
   };
   return (
     <div className="product-card border rounded-lg p-4 shadow-lg">
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/product/${product._id}`}>
         <img
           src={product.images[0]}
           alt={product.name}

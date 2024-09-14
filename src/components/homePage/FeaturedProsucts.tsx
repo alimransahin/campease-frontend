@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import getAllProducts from "../../pages/data";
+
 import { IProduct } from "../utils/interface";
 
 const FeaturedProducts: React.FC = () => {

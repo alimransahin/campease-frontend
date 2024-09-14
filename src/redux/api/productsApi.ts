@@ -4,6 +4,14 @@ import { baseApi } from "./baseApi";
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder: any) => ({
     // getProduct
+    getFilteredProduct: builder.query({
+      query: () => ({
+        url: "/products",
+        method: "GET",
+      }),
+      providesTags: ["Products"],
+    }),
+    // getProduct
     getAllProduct: builder.query({
       query: () => ({
         url: "/manage",
@@ -47,6 +55,7 @@ const productApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetFilteredProductQuery,
   useGetAllProductQuery,
   useDeleteProductMutation,
   useAddProductsMutation,

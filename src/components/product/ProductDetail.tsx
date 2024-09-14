@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import getAllProducts from "../../pages/data";
+
 import ReactImageMagnify from "react-image-magnify";
 import { useAppDispatch } from "../../redux/hooks";
 import { addToCart } from "../../redux/features/cartSlice";

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import getAllProducts from "./data";
 import ProductCard from "../components/product/ProductCard";
+import { IProduct } from "../components/utils/interface";
+import { useGetFilteredProductQuery } from "../redux/api/productsApi";
 
 const Product = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -8,21 +9,33 @@ const Product = () => {
   const [priceRange, setPriceRange] = useState("0-1000");
   const [sortOption, setSortOption] = useState("default"); // Default sorting value
 
-  const products = getAllProducts();
+  // Use the correct options for `pollingInterval`
+  const {
+    data: products = [],
+    error,
+    isLoading,
+  } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
 
-  const handleSearchChange = (e) => {
+  console.log(products);
+
+  // Input handlers
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
   };
 
-  const handlePriceRangeChange = (e) => {
+  const handlePriceRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPriceRange(e.target.value);
   };
 
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(e.target.value);
   };
 
@@ -33,12 +46,12 @@ const Product = () => {
     setSortOption("asc"); // Reset to default sorting value
   };
 
+  // Filter and sort products on the frontend
   const filteredProducts = products
-    .filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    .filter((product) => {
+      const lowercasedQuery = searchQuery.toLowerCase().trim();
+      return product.name.toLowerCase().includes(lowercasedQuery);
+    })
     .filter(
       (product) =>
         selectedCategory === "" || product.category === selectedCategory
@@ -53,13 +66,16 @@ const Product = () => {
         : b.regularPrice - a.regularPrice
     );
 
+  if (error) return <div>Error</div>;
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="container mx-auto px-4 mb-12">
       <h1 className="text-4xl font-bold my-10 text-center text-blue-400">
         All Products
       </h1>
 
-      <div className="flex flex-col-reverse xl:flex-row  justify-between items-center mb-6">
+      <div className="flex flex-col-reverse xl:flex-row justify-between items-center mb-6">
         {/* Filters and Sorting on the Left */}
         <div className="flex flex-wrap justify-center gap-4">
           <select
@@ -120,7 +136,7 @@ const Product = () => {
       {/* Product Grid */}
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 lg:gap-10">
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product._id} product={product} />
         ))}
       </div>
     </div>
