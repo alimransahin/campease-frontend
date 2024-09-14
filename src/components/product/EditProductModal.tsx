@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useBeforeUnload } from "react-router-dom";
-import { useEditProductsMutation } from "../../redux/api/productsApi";
+import {
+  useEditProductsMutation,
+  useGetFilteredProductQuery,
+} from "../../redux/api/productsApi";
 import { toast } from "react-toastify";
 import { IProduct } from "../utils/interface";
 
@@ -14,6 +17,22 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   onClose,
   onUpdate,
 }) => {
+  const { data: products = [] } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
+
+  // Create a new array with one product per unique category
+  const uniqueCategoryProducts = Array.from(
+    products.reduce((acc, product) => {
+      // If the category is not in the map yet, add the product
+      if (!acc.has(product.category)) {
+        acc.set(product.category, product);
+      }
+      return acc;
+    }, new Map())
+  ).map(([_, product]) => product);
   const [editProduct, { isLoading, isError }] = useEditProductsMutation();
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.regularPrice.toString());
@@ -22,6 +41,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   );
   const [category, setCategory] = useState(product.category);
   const [imageUrl, setImageUrl] = useState(product.images[0]);
+  const [description, setDescription] = useState(product.description);
 
   useBeforeUnload((event) => {
     event.returnValue =
@@ -37,6 +57,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       offerPrice: offerPrice ? parseFloat(offerPrice) : undefined,
       category,
       images: [imageUrl],
+      description,
     };
     editProduct({ id, updatedProduct }).unwrap();
     toast.success("Product updated successfully...!");
@@ -91,13 +112,17 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Category
             </label>
-            <input
-              type="text"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
               required
-            />
+            >
+              <option value="">Select a category</option>
+              {uniqueCategoryProducts.map((product) => (
+                <option value={product.category}>{product.category}</option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -107,6 +132,17 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
               type="text"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
               required
             />

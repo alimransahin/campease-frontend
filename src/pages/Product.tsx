@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import ProductCard from "../components/product/ProductCard";
 import { IProduct } from "../components/utils/interface";
 import { useGetFilteredProductQuery } from "../redux/api/productsApi";
 
 const Product = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [priceRange, setPriceRange] = useState("0-1000");
-  const [sortOption, setSortOption] = useState("default"); // Default sorting value
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryFromQuery = queryParams.get("category") || "";
 
-  // Use the correct options for `pollingInterval`
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromQuery);
+  const [priceRange, setPriceRange] = useState("0-1000");
+  const [sortOption, setSortOption] = useState("default");
+
   const {
     data: products = [],
     error,
@@ -20,15 +24,31 @@ const Product = () => {
     isLoading: boolean;
   };
 
-  console.log(products);
+  const uniqueCategoryProducts = Array.from(
+    products.reduce<Map<string, IProduct>>((acc, product) => {
+      if (!acc.has(product.category)) {
+        acc.set(product.category, product);
+      }
+      return acc;
+    }, new Map())
+  ).map(([, product]) => product);
 
-  // Input handlers
+  useEffect(() => {
+    setSelectedCategory(categoryFromQuery);
+  }, [categoryFromQuery]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
+    // Update the URL with the new category filter
+    window.history.replaceState(
+      null,
+      "",
+      `?category=${encodeURIComponent(e.target.value)}`
+    );
   };
 
   const handlePriceRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,10 +63,11 @@ const Product = () => {
     setSearchQuery("");
     setSelectedCategory("");
     setPriceRange("0-1000");
-    setSortOption("asc"); // Reset to default sorting value
+    setSortOption("default");
+    // Clear the category filter from the URL
+    window.history.replaceState(null, "", "/products");
   };
 
-  // Filter and sort products on the frontend
   const filteredProducts = products
     .filter((product) => {
       const lowercasedQuery = searchQuery.toLowerCase().trim();
@@ -76,7 +97,6 @@ const Product = () => {
       </h1>
 
       <div className="flex flex-col-reverse xl:flex-row justify-between items-center mb-6">
-        {/* Filters and Sorting on the Left */}
         <div className="flex flex-wrap justify-center gap-4">
           <select
             value={selectedCategory}
@@ -84,9 +104,11 @@ const Product = () => {
             className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Categories</option>
-            <option value="category1">Category 1</option>
-            <option value="category2">Category 2</option>
-            {/* Add more options as needed */}
+            {uniqueCategoryProducts.map((product) => (
+              <option key={product.category} value={product.category}>
+                {product.category}
+              </option>
+            ))}
           </select>
 
           <select
@@ -121,19 +143,17 @@ const Product = () => {
           </button>
         </div>
 
-        {/* Search Bar on the Right */}
         <div className="flex-grow flex justify-end">
           <input
             type="text"
             placeholder="Search by name or description"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="p-3 xl:my-0 my-3 w-full max-w-md  border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-3 xl:my-0 my-3 w-full max-w-md border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      {/* Product Grid */}
       <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 lg:gap-10">
         {filteredProducts.map((product) => (
           <ProductCard key={product._id} product={product} />

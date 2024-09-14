@@ -2,36 +2,31 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import CategoryCard from "./CategoryCard";
+import CategoryCard from "./categoryCard";
+import { useGetFilteredProductQuery } from "../../../redux/api/productsApi";
+import { IProduct } from "../../utils/interface";
 
 const CategoriesSection = () => {
-  const categories = [
-    {
-      name: "Electronics",
-      img: "https://via.placeholder.com/400x300?text=Electronics",
-      slug: "electronics",
-    },
-    {
-      name: "Fashion",
-      img: "https://via.placeholder.com/400x300?text=Fashion",
-      slug: "fashion",
-    },
-    {
-      name: "Home Appliances",
-      img: "https://via.placeholder.com/400x300?text=Home+Appliances",
-      slug: "home-appliances",
-    },
-    {
-      name: "Books",
-      img: "https://via.placeholder.com/400x300?text=Books",
-      slug: "books",
-    },
-    {
-      name: "Sports",
-      img: "https://via.placeholder.com/400x300?text=Sports",
-      slug: "sports",
-    },
-  ];
+  const {
+    data: products = [],
+    error,
+    isLoading,
+  } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
+
+  // Create a new array with one product per unique category
+  const uniqueCategoryProducts = Array.from(
+    products.reduce((acc, product) => {
+      // If the category is not in the map yet, add the product
+      if (!acc.has(product.category)) {
+        acc.set(product.category, product);
+      }
+      return acc;
+    }, new Map())
+  ).map(([_, product]) => product);
 
   const settings = {
     dots: true,
@@ -41,7 +36,7 @@ const CategoriesSection = () => {
     centerPadding: "40px",
     slidesToShow: 3,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2000,
     arrows: true,
     pauseOnHover: true,
     responsive: [
@@ -62,6 +57,10 @@ const CategoriesSection = () => {
     ],
   };
 
+  if (isLoading || error) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="py-12 bg-gray-100">
       <h2 className="text-3xl font-semibold text-center text-[#004e92] mb-8">
@@ -69,9 +68,9 @@ const CategoriesSection = () => {
       </h2>
       <div className="container mx-auto px-6 lg:px-12">
         <Slider {...settings}>
-          {categories.map((category, index) => (
-            <div key={index} className="px-4">
-              <CategoryCard category={category} />
+          {uniqueCategoryProducts.map((product) => (
+            <div key={product._id} className="px-4">
+              <CategoryCard product={product} />
             </div>
           ))}
         </Slider>

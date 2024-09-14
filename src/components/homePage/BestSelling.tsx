@@ -1,11 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 import ProductCard from "../product/ProductCard";
+import { useGetFilteredProductQuery } from "../../redux/api/productsApi";
+import { IProduct } from "../utils/interface";
 
 const BestSellingProducts = () => {
-  const products = getAllProducts();
+  const {
+    data: products = [],
+    error,
+    isLoading,
+  } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
+  if (isLoading || error) {
+    return <div>Loading</div>;
+  }
   return (
     <div className="py-12 bg-gray-50">
       <h2 className="text-3xl font-semibold text-center text-[#004e92] mb-8">

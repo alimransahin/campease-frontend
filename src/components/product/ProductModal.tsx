@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { useAddProductsMutation } from "../../redux/api/productsApi";
+import {
+  useAddProductsMutation,
+  useGetFilteredProductQuery,
+} from "../../redux/api/productsApi";
 import { toast } from "react-toastify";
 import useBeforeUnload from "../utils/warning";
+import { IProduct } from "../utils/interface";
 type ProductModalProps = {
   onClose: () => void;
   onCreate: () => void;
@@ -13,7 +17,23 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
   const [offer_price, setOfferPrice] = useState("");
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [description, setDescription] = useState("");
+  const { data: products = [] } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
 
+  // Create a new array with one product per unique category
+  const uniqueCategoryProducts = Array.from(
+    products.reduce((acc, product) => {
+      // If the category is not in the map yet, add the product
+      if (!acc.has(product.category)) {
+        acc.set(product.category, product);
+      }
+      return acc;
+    }, new Map())
+  ).map(([_, product]) => product);
   useBeforeUnload((event) => {
     event.returnValue =
       "You have unsaved changes. Are you sure you want to leave?";
@@ -27,6 +47,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
       offerPrice: offer_price ? parseFloat(offer_price) : null,
       category,
       images: [imageUrl],
+      description,
     };
     addProduct(newProduct).unwrap();
     toast.success("Product added successfully...!");
@@ -83,14 +104,19 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Category
             </label>
-            <input
-              type="text"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
               required
-            />
+            >
+              <option value="">Select a category</option>
+              {uniqueCategoryProducts.map((product) => (
+                <option value={product.category}>{product.category}</option>
+              ))}
+            </select>
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Image URL
@@ -99,6 +125,17 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
               type="text"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
               required
             />

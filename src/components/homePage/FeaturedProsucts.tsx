@@ -1,10 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { IProduct } from "../utils/interface";
+import { useGetFilteredProductQuery } from "../../redux/api/productsApi";
 
 const FeaturedProducts: React.FC = () => {
-  const products = getAllProducts();
+  const {
+    data: products = [],
+    error,
+    isLoading,
+  } = useGetFilteredProductQuery({}) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
+  };
+  if (isLoading || error) {
+    return <div>Loading</div>;
+  }
   const featuredProducts: any = products.slice(0, 4);
 
   return (
