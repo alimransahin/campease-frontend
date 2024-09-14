@@ -1,42 +1,56 @@
 import React, { useState } from "react";
-import getAllProducts from "./data";
+
 import EditProductModal from "../components/product/EditProductModal";
 import ProductModal from "../components/product/ProductModal";
 import { Edit, Trash } from "lucide-react";
-
-// Fetch products from your data source
+import { toast } from "react-toastify";
+import {
+  useDeleteProductMutation,
+  useGetAllProductQuery,
+} from "../redux/api/productsApi";
+import { IProduct } from "../components/utils/interface";
 
 const ProductList = () => {
-  const [products, setProducts] = useState<Product[]>(getAllProducts());
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
-  const handleAddProduct = (newProduct: Product) => {
-    setProducts([...products, newProduct]);
-    setIsAddModalOpen(false);
+  //get data
+  const {
+    data: allProducts = [],
+    error,
+    isLoading,
+  } = useGetAllProductQuery({
+    pollingInterval: 3000, // Poll every 3 seconds
+  }) as {
+    data: IProduct[];
+    error: any;
+    isLoading: boolean;
   };
 
-  const handleEditProduct = (updatedProduct: Product) => {
-    setProducts(
-      products.map((product) =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
-    );
-    setIsEditModalOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const handleDeleteProduct = (productId: number) => {
+  // delete product
+  const [deleteProduct] = useDeleteProductMutation();
+  const handleDeleteProduct = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      setProducts(products.filter((product) => product.id !== productId));
+      try {
+        await deleteProduct(id);
+        toast.success("Product deleted successfully!");
+      } catch (error) {
+        toast.error("Failed to delete product.");
+      }
     }
   };
 
-  const openEditModal = (product: Product) => {
+  // State for modals
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // State for selected product
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+  const openEditModal = (product: IProduct) => {
     setSelectedProduct(product);
     setIsEditModalOpen(true);
   };
+
+  if (error) return "Error";
+  if (isLoading) return " <Spinner />";
 
   return (
     <div>
@@ -60,8 +74,8 @@ const ProductList = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
-            <tr key={product.id}>
+          {allProducts.map((product: IProduct) => (
+            <tr key={product._id}>
               <td className="px-4 py-2 border-b">
                 <img
                   src={product.images[0]}
@@ -80,7 +94,9 @@ const ProductList = () => {
                   <Edit />
                 </button>
                 <button
-                  onClick={() => handleDeleteProduct(product.id)}
+                  onClick={() =>
+                    product._id && handleDeleteProduct(product._id)
+                  }
                   className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-red-600 hover:to-red-500 hover:text-white me-2"
                 >
                   <Trash />
@@ -95,16 +111,16 @@ const ProductList = () => {
       {isAddModalOpen && (
         <ProductModal
           onClose={() => setIsAddModalOpen(false)}
-          onCreate={handleAddProduct}
+          onCreate={() => setIsAddModalOpen(false)}
         />
       )}
 
       {/* Edit Product Modal */}
       {isEditModalOpen && selectedProduct && (
         <EditProductModal
-          product={selectedProduct}
+          product={selectedProduct} // Pass the selected product as a prop
           onClose={() => setIsEditModalOpen(false)}
-          onUpdate={handleEditProduct}
+          onUpdate={() => setIsEditModalOpen(false)}
         />
       )}
     </div>

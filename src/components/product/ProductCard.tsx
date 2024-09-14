@@ -2,17 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks";
 import { addToCart } from "../../redux/features/cartSlice";
+import { IProduct } from "../utils/interface";
 
-const ProductCard = ({ product }: { product: any }) => {
+const ProductCard = ({ product }: { product: IProduct }) => {
   const dispatch = useAppDispatch();
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: IProduct) => {
     dispatch(addToCart(product));
   };
   return (
     <div className="product-card border rounded-lg p-4 shadow-lg">
       <Link to={`/product/${product.id}`}>
         <img
-          src={product.img}
+          src={product.images[0]}
           alt={product.name}
           className="w-full h-[200px] object-cover"
         />

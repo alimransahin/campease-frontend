@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
-
-interface Product {
-  id: number;
-  name: string;
-  regularPrice: number;
-  offerPrice?: number;
-  category: string;
-  images: string[];
-}
+import { useBeforeUnload } from "react-router-dom";
+import { useEditProductsMutation } from "../../redux/api/productsApi";
+import { toast } from "react-toastify";
+import { IProduct } from "../utils/interface";
 
 interface EditProductModalProps {
-  product: Product;
+  product: IProduct;
   onClose: () => void;
-  onUpdate: (updatedProduct: Product) => void;
+  onUpdate: () => void;
 }
-
 const EditProductModal: React.FC<EditProductModalProps> = ({
   product,
   onClose,
   onUpdate,
 }) => {
+  const [editProduct, { isLoading, isError }] = useEditProductsMutation();
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.regularPrice.toString());
   const [offerPrice, setOfferPrice] = useState(
@@ -28,31 +23,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const [category, setCategory] = useState(product.category);
   const [imageUrl, setImageUrl] = useState(product.images[0]);
 
-  // Sync product state with the provided product prop
-  useEffect(() => {
-    setName(product.name);
-    setPrice(product.regularPrice.toString());
-    setOfferPrice(product.offerPrice?.toString() || "");
-    setCategory(product.category);
-    setImageUrl(product.images[0]);
-  }, [product]);
-
-  // Warning when trying to reload or close the page
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ""; // Standard for modern browsers
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
+  useBeforeUnload((event) => {
+    event.returnValue =
+      "You have unsaved changes. Are you sure you want to leave?";
+  });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const id = product._id;
     const updatedProduct = {
       id: product.id,
       name,
@@ -61,10 +38,13 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       category,
       images: [imageUrl],
     };
-    onUpdate(updatedProduct);
+    editProduct({ id, updatedProduct }).unwrap();
+    toast.success("Product updated successfully...!");
+    onUpdate();
     onClose();
   };
-
+  if (isError) return "Error";
+  if (isLoading) return " <Spinner />";
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg p-6">

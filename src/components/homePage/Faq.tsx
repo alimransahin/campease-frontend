@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-
+interface IFaq {
+  question: string;
+  answer: string;
+}
 const FAQ = () => {
   // FAQ data
   const faqData = [
@@ -33,7 +36,7 @@ const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   // Toggle function for FAQ items
-  const toggleFAQ = (index:any) => {
+  const toggleFAQ = (index: any) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 

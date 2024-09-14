@@ -4,10 +4,11 @@ import getAllProducts from "../../pages/data";
 import ReactImageMagnify from "react-image-magnify";
 import { useAppDispatch } from "../../redux/hooks";
 import { addToCart } from "../../redux/features/cartSlice";
+import { IProduct } from "../utils/interface";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: IProduct) => {
     dispatch(addToCart(product));
   };
   const { id } = useParams<{ id: string }>(); // Extract id from params

@@ -1,46 +1,40 @@
-import React, { useState, useEffect } from "react";
-
-interface ProductModalProps {
+import React, { useState } from "react";
+import { useAddProductsMutation } from "../../redux/api/productsApi";
+import { toast } from "react-toastify";
+import useBeforeUnload from "../utils/warning";
+type ProductModalProps = {
   onClose: () => void;
-  onCreate: (newProduct: any) => void;
-}
-
+  onCreate: () => void;
+};
 const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
+  const [addProduct, { isLoading, isError }] = useAddProductsMutation();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [offer_price, setOfferPrice] = useState("");
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ""; // Some browsers need this to show a confirmation dialog
-    };
+  useBeforeUnload((event) => {
+    event.returnValue =
+      "You have unsaved changes. Are you sure you want to leave?";
+  });
 
-    // Add the event listener when the modal is open
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      // Remove the event listener when the modal is closed
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     const newProduct = {
-      id: Date.now(), // Simple ID generation
       name,
       regularPrice: parseFloat(price),
       offerPrice: offer_price ? parseFloat(offer_price) : null,
       category,
       images: [imageUrl],
     };
-    onCreate(newProduct);
+    addProduct(newProduct).unwrap();
+    toast.success("Product added successfully...!");
+    onCreate();
     onClose();
   };
-
+  if (isError) return "Error";
+  if (isLoading) return " <Spinner />";
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg p-6">
