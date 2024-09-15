@@ -9,7 +9,6 @@ const Product = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryFromQuery = queryParams.get("category") || "";
-
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryFromQuery);
   const [priceRange, setPriceRange] = useState("0-1000");
@@ -24,7 +23,7 @@ const Product = () => {
     error: any;
     isLoading: boolean;
   };
-
+  console.log(products);
   const uniqueCategoryProducts = Array.from(
     products.reduce<Map<string, IProduct>>((acc, product) => {
       if (!acc.has(product.category)) {
@@ -88,9 +87,9 @@ const Product = () => {
         : b.regularPrice - a.regularPrice
     );
 
- if (isLoading || error) {
-   return <LoadingSpinner />;
- }
+  if (isLoading || error) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="container mx-auto px-4 mb-12">
       <h1 className="text-4xl font-bold my-10 text-center text-blue-400">

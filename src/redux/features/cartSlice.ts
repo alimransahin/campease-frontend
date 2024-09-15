@@ -29,7 +29,7 @@ export const cartSlice = createSlice({
     },
     updateQuantity: (state, action) => {
       state.products.map((product: any) => {
-        if (product.id === action.payload.id) {
+        if (product._id === action.payload._id) {
           if (action.payload.type === "increment") {
             product.quantity += 1;
           } else if (action.payload.type === "decrement") {
@@ -42,7 +42,7 @@ export const cartSlice = createSlice({
     },
     deleteProduct: (state, action) => {
       const deleteProduct = state.products.find(
-        (product: any) => product.id === action.payload.id
+        (product: any) => product._id === action.payload._id
       );
       if (deleteProduct) {
         state.products.pop(deleteProduct);

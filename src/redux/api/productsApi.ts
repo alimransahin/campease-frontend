@@ -13,13 +13,12 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     // getSingleProduct
-
     getSingleProduct: builder.query({
       query: (id: string) => ({
         url: `/product/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "Products", id }], // This will cache the product by its ID
+      providesTags: (id: string) => [{ type: "Products", id }], // This will cache the product by its ID
     }),
 
     // getProduct

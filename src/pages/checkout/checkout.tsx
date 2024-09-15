@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector } from "../../redux/hooks";
 
 interface IItem {
   id: React.Key | null | undefined;

@@ -11,12 +11,12 @@ import {
 const Cart = () => {
   const products = useAppSelector((store) => store.cart.products);
   const dispatch = useAppDispatch();
-  const handleQuantityChange = (id: number, type: string) => {
-    dispatch(updateQuantity({ id, type }));
+  const handleQuantityChange = (_id: string, type: string) => {
+    dispatch(updateQuantity({ _id, type }));
   };
 
-  const handleRemoveProduct = (id: number) => {
-    dispatch(deleteProduct({ id }));
+  const handleRemoveProduct = (_id: string) => {
+    dispatch(deleteProduct({ _id }));
   };
   const handleClearCart = () => {
     dispatch(clearcart());
@@ -74,7 +74,7 @@ const Cart = () => {
                 <tbody>
                   {products.map((product: any) => (
                     <tr
-                      key={product.id}
+                      key={product._id}
                       className="border-b border-gray-200 text-center"
                     >
                       <td className="p-4">
@@ -93,7 +93,7 @@ const Cart = () => {
                         <div className="flex justify-center space-x-2">
                           <button
                             onClick={() =>
-                              handleQuantityChange(product.id, "decrement")
+                              handleQuantityChange(product._id, "decrement")
                             }
                             disabled={product.quantity <= 1}
                             className="px-2 py-1 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
@@ -103,7 +103,7 @@ const Cart = () => {
                           <span className="text-lg">{product.quantity}</span>
                           <button
                             onClick={() =>
-                              handleQuantityChange(product.id, "increment")
+                              handleQuantityChange(product._id, "increment")
                             }
                             disabled={product.quantity >= product.qty}
                             className="px-2 py-1 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
@@ -127,7 +127,7 @@ const Cart = () => {
                       </td>
                       <td className="p-4">
                         <button
-                          onClick={() => handleRemoveProduct(product.id)}
+                          onClick={() => handleRemoveProduct(product._id)}
                           className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-red-600 hover:to-red-500 hover:text-white me-2"
                         >
                           <Trash />
