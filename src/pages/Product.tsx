@@ -71,7 +71,9 @@ const Product = () => {
   const filteredProducts = products
     .filter((product) => {
       const lowercasedQuery = searchQuery.toLowerCase().trim();
-      return product.name.toLowerCase().includes(lowercasedQuery);
+      const searchField =
+        `${product.name} ${product.description}`.toLowerCase();
+      return searchField.includes(lowercasedQuery);
     })
     .filter(
       (product) =>

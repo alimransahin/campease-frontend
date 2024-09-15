@@ -41,12 +41,11 @@ export const cartSlice = createSlice({
       updatePrice(state);
     },
     deleteProduct: (state, action) => {
-      const deleteProduct = state.products.find(
-        (product: any) => product._id === action.payload._id
+      const productId = action.payload._id;
+      console.log(productId);
+      state.products = state.products.filter(
+        (product: any) => product._id !== productId
       );
-      if (deleteProduct) {
-        state.products.pop(deleteProduct);
-      }
       updatePrice(state);
     },
     clearcart: (state) => {
