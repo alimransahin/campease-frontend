@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { clearcart } from "../../redux/features/cartSlice";
 
 interface IItem {
   id: React.Key | null | undefined;
@@ -15,6 +16,7 @@ const Checkout: React.FC = () => {
     phone: "",
     address: "",
   });
+  const dispatch = useAppDispatch();
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const myProduct = useAppSelector((store) => store.cart.products);
   const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
@@ -46,6 +48,7 @@ const Checkout: React.FC = () => {
       alert("Redirecting to online payment gateway...");
       navigate("/payment");
     }
+    dispatch(clearcart());
   };
 
   const getOrderOverview = () => {

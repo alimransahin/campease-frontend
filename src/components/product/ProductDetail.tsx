@@ -119,18 +119,6 @@ const ProductDetail = () => {
           </p>
 
           <div className="flex items-center align-middle space-x-4 mb-6">
-            {/* <label className="block text-md font-medium text-gray-700">
-              Quantity
-            </label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(Math.max(1, parseInt(e.target.value)))
-              }
-              className="w-20 px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#004e92] focus:border-[#004e92]"
-              min="1"
-            /> */}
             <button
               onClick={() => handleAddToCart(product)}
               className="px-6 py-3 bg-[#004e92] text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] transform transition-transform hover:scale-105"
