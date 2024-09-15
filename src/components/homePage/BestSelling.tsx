@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../product/ProductCard";
 import { useGetFilteredProductQuery } from "../../redux/api/productsApi";
 import { IProduct } from "../utils/interface";
+import LoadingSpinner from "../utils/LoadingSpinner";
 
 const BestSellingProducts = () => {
   const {
@@ -16,7 +17,7 @@ const BestSellingProducts = () => {
     isLoading: boolean;
   };
   if (isLoading || error) {
-    return <div>Loading</div>;
+    return <LoadingSpinner />;
   }
   return (
     <div className="py-12 bg-gray-50">

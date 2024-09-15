@@ -9,6 +9,7 @@ import {
   useGetAllProductQuery,
 } from "../redux/api/productsApi";
 import { IProduct } from "../components/utils/interface";
+import LoadingSpinner from "../components/utils/LoadingSpinner";
 
 const ProductList = () => {
   //get data
@@ -49,8 +50,9 @@ const ProductList = () => {
     setIsEditModalOpen(true);
   };
 
-  if (error) return "Error";
-  if (isLoading) return " <Spinner />";
+  if (isLoading || error) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div>

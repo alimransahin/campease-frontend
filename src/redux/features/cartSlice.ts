@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 // Define the initial state using that type
 const initialState = {
@@ -16,10 +17,13 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const isExist = state.products.find(
-        (product: any) => product.id === action.payload._id
+        (product: any) => product._id === action.payload._id
       );
       if (!isExist) {
         state.products.push({ ...action.payload, quantity: 1 });
+        toast.success("Product Added to cart");
+      } else {
+        toast.info("This product already added in your cart");
       }
       updatePrice(state);
     },

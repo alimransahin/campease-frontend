@@ -1,33 +1,41 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
 import ReactImageMagnify from "react-image-magnify";
 import { useAppDispatch } from "../../redux/hooks";
 import { addToCart } from "../../redux/features/cartSlice";
 import { IProduct } from "../utils/interface";
+import { useGetSingleProductQuery } from "../../redux/api/productsApi";
+import LoadingSpinner from "../utils/LoadingSpinner";
 
 const ProductDetail = () => {
   const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  const {
+    data: product,
+    error,
+    isLoading,
+  } = useGetSingleProductQuery(id) as {
+    data: IProduct;
+    error: any;
+    isLoading: boolean;
+  };
+
+  const [quantity, setQuantity] = useState(1);
+
   const handleAddToCart = (product: IProduct) => {
     dispatch(addToCart(product));
   };
-  const { id } = useParams<{ id: string }>(); // Extract id from params
-  if (!id) {
-    return <p>Invalid product ID</p>;
-  }
-
-  const products = getAllProducts();
-  const product = products.find((item) => item.id === parseInt(id, 10)); // Find the product by ID
-
-  if (!product) {
-    return <p>Product not found</p>;
-  }
-
-  const [quantity, setQuantity] = useState(1);
 
   const handleAddToWishlist = () => {
     console.log(`${product.name} added to wishlist.`);
   };
+
+  // Handle loading and error states before accessing the product data
+  if (isLoading || error) {
+    return <LoadingSpinner />;
+  }
+  if (!product) return <p className="min-h-screen m-auto">Product not found</p>;
 
   return (
     <div className="container mx-auto p-8 bg-white shadow-lg rounded-lg">
@@ -43,21 +51,17 @@ const ProductDetail = () => {
               },
               largeImage: {
                 src: product.images[0], // Use the same image for zoom
-                width: 900, // Adjust to maintain the aspect ratio with the small image
-                height: 600, // Ensure it matches the aspect ratio of the small image
+                width: 1200,
+                height: 1000,
               },
               lensStyle: { backgroundColor: "rgba(0,0,0,.5)" },
-              enlargedImagePosition: "over", // Optional: This shows the zoomed image over the small image
-              hintTextMouse: "Hover to Zoom",
-              isHintEnabled: true,
-              shouldHideHintAfterFirstActivation: false,
+              enlargedImagePosition: "over",
             }}
             className="w-full h-auto object-cover rounded-lg shadow-md"
           />
-
-          {product.images && product.images.length > 1 && (
-            <div className="flex mt-4 space-x-2">
-              {product.images.map((image, index) => (
+          <div className="flex mt-4 space-x-2">
+            {Array.isArray(product.images) &&
+              product.images.map((image, index) => (
                 <img
                   key={index}
                   className="w-20 h-20 object-cover rounded-md border border-gray-300 cursor-pointer hover:opacity-80 transition-opacity"
@@ -65,8 +69,7 @@ const ProductDetail = () => {
                   alt={`${product.name} - ${index + 1}`}
                 />
               ))}
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Product Information Section */}
@@ -75,7 +78,6 @@ const ProductDetail = () => {
             {product.name}
           </h1>
 
-          {/* Price */}
           <p className="text-2xl text-gray-700 mb-4">
             Price:{" "}
             {product.offerPrice ? (
@@ -88,11 +90,10 @@ const ProductDetail = () => {
                 </span>
               </span>
             ) : (
-              <span className="font-bold">${product.offerPrice}</span>
+              <span className="font-bold">${product.regularPrice}</span>
             )}
           </p>
 
-          {/* Stock Availability */}
           <p
             className={`text-lg font-medium ${
               product.qty > 0 ? "text-[#004e92]" : "text-red-500"
@@ -101,7 +102,6 @@ const ProductDetail = () => {
             {product.qty > 0 ? `${product.qty} in stock` : "Out of stock"}
           </p>
 
-          {/* Category */}
           <p className="text-md text-gray-600 mb-4">
             Category:{" "}
             <span className="font-semibold text-gray-900">
@@ -109,50 +109,42 @@ const ProductDetail = () => {
             </span>
           </p>
 
-          {/* Product Ratings */}
           <div className="flex mb-6">
             <span className="text-yellow-500 text-xl">★★★★☆</span>
             <span className="ml-2 text-gray-600 text-md">(4.5 ratings)</span>
           </div>
 
-          {/* Product Description */}
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
             {product.description}
           </p>
 
-          {/* Quantity Selector and Add to Cart in one line */}
           <div className="flex items-center align-middle space-x-4 mb-6">
-            <label className="block text-md font-medium text-gray-700">
+            {/* <label className="block text-md font-medium text-gray-700">
               Quantity
             </label>
-            <div>
-              <input
-                type="number"
-                value={quantity}
-                onChange={(e) =>
-                  setQuantity(Math.max(1, parseInt(e.target.value)))
-                }
-                className="w-20 px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#004e92] focus:border-[#004e92]"
-                min="1"
-              />
-            </div>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) =>
+                setQuantity(Math.max(1, parseInt(e.target.value)))
+              }
+              className="w-20 px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#004e92] focus:border-[#004e92]"
+              min="1"
+            /> */}
             <button
-              onClick={() => {
-                handleAddToCart(product);
-              }}
+              onClick={() => handleAddToCart(product)}
               className="px-6 py-3 bg-[#004e92] text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] transform transition-transform hover:scale-105"
             >
               Add to Cart
             </button>
-          </div>
 
-          {/* Add to Wishlist Button */}
-          <button
-            onClick={handleAddToWishlist}
-            className="px-6 py-3 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white"
-          >
-            Add to Wishlist
-          </button>
+            <button
+              onClick={handleAddToWishlist}
+              className="px-6 py-3 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white"
+            >
+              Add to Wishlist
+            </button>
+          </div>
         </div>
       </div>
     </div>

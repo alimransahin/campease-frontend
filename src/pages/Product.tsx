@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import ProductCard from "../components/product/ProductCard";
 import { IProduct } from "../components/utils/interface";
 import { useGetFilteredProductQuery } from "../redux/api/productsApi";
+import LoadingSpinner from "../components/utils/LoadingSpinner";
 
 const Product = () => {
   const location = useLocation();
@@ -87,9 +88,9 @@ const Product = () => {
         : b.regularPrice - a.regularPrice
     );
 
-  if (error) return <div>Error</div>;
-  if (isLoading) return <div>Loading...</div>;
-
+ if (isLoading || error) {
+   return <LoadingSpinner />;
+ }
   return (
     <div className="container mx-auto px-4 mb-12">
       <h1 className="text-4xl font-bold my-10 text-center text-blue-400">

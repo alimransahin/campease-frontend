@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IProduct } from "../utils/interface";
 import { useGetFilteredProductQuery } from "../../redux/api/productsApi";
+import LoadingSpinner from "../utils/LoadingSpinner";
 
 const FeaturedProducts: React.FC = () => {
   const {
@@ -14,7 +15,7 @@ const FeaturedProducts: React.FC = () => {
     isLoading: boolean;
   };
   if (isLoading || error) {
-    return <div>Loading</div>;
+    return <LoadingSpinner />;
   }
   const featuredProducts: any = products.slice(0, 4);
 

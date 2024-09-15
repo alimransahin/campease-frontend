@@ -11,6 +11,17 @@ const productApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Products"],
     }),
+
+    // getSingleProduct
+
+    getSingleProduct: builder.query({
+      query: (id: string) => ({
+        url: `/product/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Products", id }], // This will cache the product by its ID
+    }),
+
     // getProduct
     getAllProduct: builder.query({
       query: () => ({
@@ -56,6 +67,7 @@ const productApi = baseApi.injectEndpoints({
 
 export const {
   useGetFilteredProductQuery,
+  useGetSingleProductQuery,
   useGetAllProductQuery,
   useDeleteProductMutation,
   useAddProductsMutation,

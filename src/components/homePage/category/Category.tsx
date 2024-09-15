@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import CategoryCard from "./categoryCard";
 import { useGetFilteredProductQuery } from "../../../redux/api/productsApi";
 import { IProduct } from "../../utils/interface";
+import LoadingSpinner from "../../utils/LoadingSpinner";
 
 const CategoriesSection = () => {
   const {
@@ -58,7 +59,7 @@ const CategoriesSection = () => {
   };
 
   if (isLoading || error) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

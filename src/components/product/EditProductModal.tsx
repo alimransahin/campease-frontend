@@ -6,6 +6,7 @@ import {
 } from "../../redux/api/productsApi";
 import { toast } from "react-toastify";
 import { IProduct } from "../utils/interface";
+import LoadingSpinner from "../utils/LoadingSpinner";
 
 interface EditProductModalProps {
   product: IProduct;
@@ -33,7 +34,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       return acc;
     }, new Map())
   ).map(([_, product]) => product);
-  const [editProduct, { isLoading, isError }] = useEditProductsMutation();
+  const [editProduct, { isLoading, error }] = useEditProductsMutation();
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.regularPrice.toString());
   const [offerPrice, setOfferPrice] = useState(
@@ -64,8 +65,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     onUpdate();
     onClose();
   };
-  if (isError) return "Error";
-  if (isLoading) return " <Spinner />";
+  if (isLoading || error) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg p-6">

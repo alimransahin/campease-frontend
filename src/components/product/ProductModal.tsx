@@ -6,12 +6,13 @@ import {
 import { toast } from "react-toastify";
 import useBeforeUnload from "../utils/warning";
 import { IProduct } from "../utils/interface";
+import LoadingSpinner from "../utils/LoadingSpinner";
 type ProductModalProps = {
   onClose: () => void;
   onCreate: () => void;
 };
 const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
-  const [addProduct, { isLoading, isError }] = useAddProductsMutation();
+  const [addProduct, { isLoading, error }] = useAddProductsMutation();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [offer_price, setOfferPrice] = useState("");
@@ -54,8 +55,9 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
     onCreate();
     onClose();
   };
-  if (isError) return "Error";
-  if (isLoading) return " <Spinner />";
+ if (isLoading || error) {
+   return <LoadingSpinner />;
+ }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg p-6">
