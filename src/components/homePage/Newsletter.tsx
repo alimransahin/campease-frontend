@@ -1,5 +1,3 @@
-import React from "react";
-
 const Newsletter = () => {
   return (
     <div className="py-12 bg-gradient-to-br from-[#004e92] to-[#000428] text-white ">

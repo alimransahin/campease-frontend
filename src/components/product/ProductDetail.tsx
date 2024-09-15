@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ReactImageMagnify from "react-image-magnify";
+// import {ImageZoom} from "../utils/"
 import { useAppDispatch } from "../../redux/hooks";
 import { addToCart } from "../../redux/features/cartSlice";
 import { IProduct } from "../utils/interface";
@@ -40,23 +39,12 @@ const ProductDetail = () => {
       <div className="flex flex-col md:flex-row items-start md:space-x-10">
         {/* Product Images Section */}
         <div className="w-full md:w-1/2 mb-6 md:mb-0">
-          <ReactImageMagnify
-            {...{
-              smallImage: {
-                alt: product.name,
-                isFluidWidth: true,
-                src: product.images[0], // Ensure the small image is well-sized
-              },
-              largeImage: {
-                src: product.images[0], // Use the same image for zoom
-                width: 1200,
-                height: 1000,
-              },
-              lensStyle: { backgroundColor: "rgba(0,0,0,.5)" },
-              enlargedImagePosition: "over",
-            }}
+          <img
+            src={product.images[0]}
+            alt=""
             className="w-full h-auto object-cover rounded-lg shadow-md"
           />
+
           <div className="flex mt-4 space-x-2">
             {Array.isArray(product.images) &&
               product.images.map((image, index) => (

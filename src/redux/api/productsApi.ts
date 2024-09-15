@@ -52,7 +52,13 @@ const productApi = baseApi.injectEndpoints({
     }),
     // Edit product
     editProducts: builder.mutation({
-      query: ({ id, updatedProduct }) => {
+      query: ({
+        id,
+        updatedProduct,
+      }: {
+        id: string;
+        updatedProduct: Partial<IProduct>;
+      }) => {
         return {
           url: `/manage/${id}`,
           method: "PUT",

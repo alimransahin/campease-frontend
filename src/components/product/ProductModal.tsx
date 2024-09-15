@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   useAddProductsMutation,
   useGetFilteredProductQuery,
@@ -55,9 +55,9 @@ const ProductModal: React.FC<ProductModalProps> = ({ onClose, onCreate }) => {
     onCreate();
     onClose();
   };
- if (isLoading || error) {
-   return <LoadingSpinner />;
- }
+  if (isLoading || error) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white w-full max-w-lg mx-4 rounded-lg shadow-lg p-6">

@@ -1,6 +1,10 @@
 // getUniqueCategoryProducts.js
-
-export const getUniqueCategoryProducts = (products) => {
+interface Product {
+  category: string;
+  name: string;
+  price: number;
+}
+export const getUniqueCategoryProducts = (products: Product[]): Product[] => {
   const uniqueCategoryProducts = Array.from(
     products.reduce((acc, product) => {
       // If the category is not in the map yet, add the product

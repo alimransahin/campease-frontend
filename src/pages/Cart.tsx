@@ -1,5 +1,5 @@
 import { Trash } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
@@ -14,7 +14,7 @@ const Cart = () => {
   const handleQuantityChange = (_id: string, type: string) => {
     dispatch(updateQuantity({ _id, type }));
   };
-  const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
+  const { totalPrice } = useAppSelector((store) => store.cart);
   const handleRemoveProduct = (_id: string) => {
     const confirmRemove = window.confirm(
       "Are you sure you want to remove this product?"

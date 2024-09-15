@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-interface IFaq {
-  question: string;
-  answer: string;
-}
+import { useState } from "react";
+
 const FAQ = () => {
   // FAQ data
   const faqData = [

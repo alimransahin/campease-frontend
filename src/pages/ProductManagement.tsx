@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import EditProductModal from "../components/product/EditProductModal";
 import ProductModal from "../components/product/ProductModal";
