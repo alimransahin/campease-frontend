@@ -65,49 +65,51 @@ const ProductList = () => {
       </button>
 
       {/* Product List Table */}
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 border-b">Image</th>
-            <th className="px-4 py-2 border-b">Name</th>
-            <th className="px-4 py-2 border-b">Price</th>
-            <th className="px-4 py-2 border-b">Category</th>
-            <th className="px-4 py-2 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allProducts.map((product: IProduct) => (
-            <tr key={product._id}>
-              <td className="px-4 py-2 border-b">
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-16 h-16 object-cover"
-                />
-              </td>
-              <td className="px-4 py-2 border-b">{product.name}</td>
-              <td className="px-4 py-2 border-b">${product.regularPrice}</td>
-              <td className="px-4 py-2 border-b">{product.category}</td>
-              <td className="px-4 py-2 border-b">
-                <button
-                  onClick={() => openEditModal(product)}
-                  className="px-4 py-2 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white me-2"
-                >
-                  <Edit />
-                </button>
-                <button
-                  onClick={() =>
-                    product._id && handleDeleteProduct(product._id)
-                  }
-                  className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-red-600 hover:to-red-500 hover:text-white me-2"
-                >
-                  <Trash />
-                </button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 border-b">Image</th>
+              <th className="px-4 py-2 border-b">Name</th>
+              <th className="px-4 py-2 border-b">Price</th>
+              <th className="px-4 py-2 border-b">Category</th>
+              <th className="px-4 py-2 border-b">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {allProducts.map((product: IProduct) => (
+              <tr key={product._id}>
+                <td className="px-4 py-2 border-b">
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-16 h-16 object-cover"
+                  />
+                </td>
+                <td className="px-4 py-2 border-b">{product.name}</td>
+                <td className="px-4 py-2 border-b">${product.regularPrice}</td>
+                <td className="px-4 py-2 border-b">{product.category}</td>
+                <td className="px-4 py-2 border-b">
+                  <button
+                    onClick={() => openEditModal(product)}
+                    className="px-4 py-2 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white me-2"
+                  >
+                    <Edit />
+                  </button>
+                  <button
+                    onClick={() =>
+                      product._id && handleDeleteProduct(product._id)
+                    }
+                    className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-red-600 hover:to-red-500 hover:text-white me-2"
+                  >
+                    <Trash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Add Product Modal */}
       {isAddModalOpen && (
