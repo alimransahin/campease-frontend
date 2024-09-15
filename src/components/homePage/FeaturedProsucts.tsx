@@ -50,6 +50,15 @@ const FeaturedProducts: React.FC = () => {
           </div>
         ))}
       </div>
+      {/* View More Button */}
+      <div className="flex justify-center mt-10">
+        <Link
+          to="/products"
+          className="px-6 py-3 border-2 border-[#004e92] text-[#004e92] rounded-lg font-bold transition-all duration-500 ease-in-out bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:text-white"
+        >
+          View More
+        </Link>
+      </div>
     </div>
   );
 };

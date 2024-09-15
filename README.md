@@ -15,7 +15,8 @@ Welcome to **Campease**, an e-commerce platform dedicated to camping enthusiasts
 - **Best Selling Products**: Display best-selling products with a “View More” button.
 - **Categories Section**: Displays product categories with icons or images.
 - **Featured Products**: Highlights specific products with a button to view details.
-- **Unique Section**: Features elements like testimonials or video blogs.
+- **Customer Review**: show our customer review.
+- **Newsletter**: Subscriber get updated product info by Email.
 - **FAQ Section**: Answers common questions about the shop and products.
 - **Footer**: Displays contact information and social media links.
 
@@ -23,12 +24,13 @@ Welcome to **Campease**, an e-commerce platform dedicated to camping enthusiasts
 
 - Display all products in grid or list view.
 - Filter products by category, price, and sort by ascending/descending price.
-- Search products by name or description.
+- Search products by name.
 - Reset filters using the "Clear" button.
 
 ### 3. Product Details Page
 
-- Shows product information such as price, description, ratings, and available stock.
+- Shows product all information like price, description, ratings, and available stock.
+- Image gallery for product pages with a magnifier effect.
 - **Add to Cart Button**: Adjust quantity according to stock levels. Disables when out of stock.
 
 ### 4. Product Management
@@ -46,18 +48,11 @@ Welcome to **Campease**, an e-commerce platform dedicated to camping enthusiasts
 
 - Collects user details (name, email, phone, address).
 - **Payment Methods**: Offers Cash on Delivery or Stripe integration.
-- Stock is updated after a successful order.
 
 ### 7. About Us Page
 
 - Displays the shop’s contact information and mission.
 - Includes a map and social media links.
-
-## Bonus Features
-
-- Image gallery for product pages with a magnifier effect.
-- Random featured products refreshing every 10 seconds using RTK Query.
-- Stripe integration for online payments.
 
 ## Technical Specifications
 
@@ -67,9 +62,35 @@ Welcome to **Campease**, an e-commerce platform dedicated to camping enthusiasts
 - **Redux**: State management for a consistent experience across pages.
 - **Tailwind CSS**: For styling and responsive design.
 - **RTK Query**: For efficient API fetching and cache management.
+- **Toast**: For show information and success.
 
 ### Backend:
 
 - **Node.js**: For server-side logic.
 - **Express**: For handling CRUD operations.
-- **MongoDB**: For database storage (optional integration with Mongoose for better schema management).
+- **MongoDB**: For database storage .
+
+## Installation and Setup
+
+Follow these steps to set up and run the Campease application locally.
+
+### 1. Clone the Repository
+
+Start by cloning the Campease repository from GitHub:
+
+```bash
+git clone https://github.com/your-repo/campease.git
+cd campease
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Development Server
+
+```bash
+npm run dev
+```

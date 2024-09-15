@@ -121,7 +121,12 @@ const ProductDetail = () => {
           <div className="flex items-center align-middle space-x-4 mb-6">
             <button
               onClick={() => handleAddToCart(product)}
-              className="px-6 py-3 bg-[#004e92] text-white font-semibold rounded-lg shadow-md hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] transform transition-transform hover:scale-105"
+              className={`px-6 py-3 font-semibold rounded-lg shadow-md transform transition-transform ${
+                product.quantity && product.quantity > 0
+                  ? "bg-[#004e92] text-white hover:bg-gradient-to-r hover:from-[#000428] hover:to-[#004e92] hover:scale-105"
+                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
+              }`}
+              disabled={!(product.quantity && product.quantity > 0)}
             >
               Add to Cart
             </button>

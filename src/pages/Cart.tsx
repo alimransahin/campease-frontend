@@ -14,12 +14,22 @@ const Cart = () => {
   const handleQuantityChange = (_id: string, type: string) => {
     dispatch(updateQuantity({ _id, type }));
   };
-
+  const { totalPrice, tax, grandTotal } = useAppSelector((store) => store.cart);
   const handleRemoveProduct = (_id: string) => {
-    dispatch(deleteProduct({ _id }));
+    const confirmRemove = window.confirm(
+      "Are you sure you want to remove this product?"
+    );
+    if (confirmRemove) {
+      dispatch(deleteProduct({ _id }));
+    }
   };
   const handleClearCart = () => {
-    dispatch(clearcart());
+    const confirmRemove = window.confirm(
+      "Are you sure you want to remove this product?"
+    );
+    if (confirmRemove) {
+      dispatch(clearcart());
+    }
   };
   const navigate = useNavigate();
 
@@ -136,7 +146,32 @@ const Cart = () => {
                 </tbody>
               </table>
             </div>
-
+            <h2 className="text-xl font-semibold text-gray-900 mt-12">
+              Order Overview
+            </h2>
+            <table className="w-full border-collapse">
+              <tbody>
+                {products.map((item: any) => (
+                  <tr key={item.id} className="border-b border-gray-200">
+                    <td className="py-2 px-4 text-gray-900">{item.name}</td>
+                    <td className="py-2 px-4 text-gray-700">
+                      ${item.regularPrice.toLocaleString()} x {item.quantity}
+                    </td>
+                    <td className="py-2 px-4 text-gray-700">
+                      ${(item.regularPrice * item.quantity).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+                <tr className="border-b border-gray-200">
+                  <td className="py-2 px-4 text-gray-900" colSpan={2}>
+                    Total:
+                  </td>
+                  <td className="py-2 px-4 text-gray-700">
+                    ${totalPrice.toFixed(2)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
             <div className="mt-6 flex flex-col sm:flex-row  justify-around">
               <button
                 onClick={() => handleClearCart()}
